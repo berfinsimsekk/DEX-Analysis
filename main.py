@@ -193,10 +193,7 @@ str1 = ('''<!DOCTYPE html>
     </style>
   </head>
   <body>
-  <p>
-      Create a simple network with some nodes and edges. Some of the events are
-      logged in the console in improve readability.
-    </p>
+  <p id=text></p>
     <div class="slidecontainer">'''
 +
 f'''
@@ -207,7 +204,7 @@ f'''
         class="slider"
         id="myRange"
       />
-  <p>Token Count: <span id="demo"></span></p>
+  <p> Token Count: <span id="demo"></span></p>
 </div>
 <div id="mynetwork"></div>
     <div>
@@ -217,6 +214,9 @@ f'''
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
     output.innerHTML = slider.value;
+    var transaction_count = {count}
+    var text = document.getElementById('text');
+    text.innerHTML = " Total number of UNISWAP transactions: " + transaction_count;
 
     var nodes = new vis.DataSet([]);
     var newnodes = [];
