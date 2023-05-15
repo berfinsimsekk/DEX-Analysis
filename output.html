@@ -15,19 +15,16 @@
     </style>
   </head>
   <body>
-  <p>
-      Create a simple network with some nodes and edges. Some of the events are
-      logged in the console in improve readability.
-    </p>
+  <p id=text></p>
     <div class="slidecontainer">
   <input type="range" 
         min=20 
-        max=32 
+        max=38 
         value=20 
         class="slider"
         id="myRange"
       />
-  <p>Token Count: <span id="demo"></span></p>
+  <p> Token Count: <span id="demo"></span></p>
 </div>
 <div id="mynetwork"></div>
     <div>
@@ -37,13 +34,16 @@
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
     output.innerHTML = slider.value;
+    var transaction_count = 42
+    var text = document.getElementById('text');
+    text.innerHTML = " Total number of UNISWAP transactions: " + transaction_count;
 
     var nodes = new vis.DataSet([]);
     var newnodes = [];
     var tokens = [];
     var addresses = [];
-    var a = "['PEPE FI', 'ETH', 'PiggyPepe', 'Pengu', 'Milady', 'Four', 'MongCoin', 'Pepe', 'Shina Inu', 'WENFRENS', 'Fake Market Cap', 'Pierre The Parrot', 'Buzzard', 'Poshi', 'BEER', 'Lint', 'Tether USD', 'Checks Token', 'Scat', 'Homer', 'TOAD KILLER', 'Pepe Coin', 'Robonomics', 'Pear Swap', 'Esco coin', 'Artificial Intelligence Fashion Token', 'Bambi', 'spooDEEMOON', 'Issou', 'Jane', 'PepeCola', 'Monkeys Token']";
-    var b = "['0xAFC00F2cFeb0877D72B11E6Ff784bA048c1B3715', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', '0xe8ceaAd8CB289d3e05775DC82060c4492CcE3E21', '0x26b17fC034b82A20563dbB02EC9E78B1D65d7a58', '0x12970E6868f88f6557B76120662c1B3E50A646bf', '0x244b797d622D4DEe8b188b03546ACAAbD0Cf91A0', '0x1ce270557C1f68Cfb577b856766310Bf8B47FD9C', '0x6982508145454Ce325dDbE47a25d4ec3d2311933', '0x243cACb4D5fF6814AD668C3e225246efA886AD5a', '0xa62d8FFB8d0Ca7d3938cd3776F6630Fc5dBadA79', '0xc6cd44F9630886a7492cEa3d9860e0510933A600', '0x1d059BD3971Ccc289431773141c8F294e029Df6A', '0xF4C70EC385b8F7EDaefF6449fBD4DC20Fa19f410', '0x6785024DaD6D506b521CAdA79bBd135E80838e55', '0x0D58df0929b6bAf8ED231f3Fa672F0e5DcD665f7', '0x11f9e9B3c539368BEA16DDE2108B748a9672D714', '0xdAC17F958D2ee523a2206206994597C13D831ec7', '0x049E9f5369358786A1cE6483d668D062cfe547ec', '0x02d7a93829B365b7Ad4c582DAce1493aAC50A290', '0x44aAd22aFbB2606d7828Ca1f8f9E5af00e779AE1', '0x370a366f402e2e41CDBbE54EcEC12aaE0cce1955', '0xFe1EF2B469846D1832B25095ff51B004f090E0C6', '0x7dE91B204C1C737bcEe6F000AAA6569Cf7061cb7', '0x5dCD6272C3cbb250823F0b7e6C618bce11B21f90', '0x7163436b8EfFfB469F6BB81cc908b1661d4795e6', '0xBff061d9a60F9176e0162639b593B8B9923C6cC8', '0x9DB0FB0Aebe6A925B7838D16e3993A3976A64AaB', '0xe95B19dD1a29865485c680A003d15b47590CAF46', '0x79BF5D97777ad512f93178dD8BCd341f44d1314F', '0xdf30aD14bCBA3403559853cC0B2e1F0a1AA8bFD7', '0x55fB228730ED971269EBF284C7500d5fF572A141', '0x20CDECBF5d56870b4068a255580a58D068446c92']";
+    var a = "['ETH', 'USD Coin', 'Normie', 'Issou', 'Skeletor', 'Milady', 'Minions', 'Nyan Meme Coin', 'HyperToken', 'Krtek', 'WEN Marketing', 'PepePill', 'Peter Pan', 'Capybara', 'ANIME FOR CRYPTO', 'Pengu', 'I LOVE SNOOPY', 'Stoned Pepe', 'Autism', 'TARD', 'TEQUILA', 'PepeGod', 'BEER', 'SnailBrook', 'PiggyPepe', 'PePeHunter.ninja', 'SHROOMS', 'Felonious Gru', 'Pepe Coin', 'Monkeys Token', 'Agoras Token', 'SilverDAX', 'WENFRENS', 'Tether USD', 'Lint', 'MtPelerin Shares', 'WASSIE']";
+    var b = "['0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', '0x772c44b5166647B135BB4836AbC4E06c28E94978', '0x79BF5D97777ad512f93178dD8BCd341f44d1314F', '0xF0994613ec37e8BAA65740820186B7eA68015B0b', '0x12970E6868f88f6557B76120662c1B3E50A646bf', '0x271a66F8c4728b07A6a8D3895cf825f4A0791d3C', '0x0ebE30595a44E5288C24161dDfC1E9fa08E33a0C', '0x54D8517985E74D5708fe45621C8E945C9e4218B9', '0x9CfFcAD55d78B1370dE77e00C47B057EbE44334C', '0x0060032487F2FDCFf4eAd14Bb38F7dB7025f16Cb', '0xc27692916b733767aa42C91e228daFD74D6DaCb5', '0xCEBA2a8F6Ec221AEB5f3a7bcd15Cbc7e6a387bfb', '0xF190dbD849E372FF824e631a1FdF199f38358BCf', '0xc668B113ae740702CB27b49a4c9551276042c384', '0x26b17fC034b82A20563dbB02EC9E78B1D65d7a58', '0xF0EDAC27Aa3E85E2D176F689B0025f90C154393a', '0xa29681A78416C689A955E3E9e61348B348B9532D', '0x07bE107573a50A741231FF17E93dB323fD89DdFb', '0xBF9E1fD930d3507701293e66eBb8d940209fbae3', '0xB6911a0452f91BA730267a7b8a026d5866249c59', '0x113c8c68233bfA859230d09Abde89E2B483E3F91', '0x0D58df0929b6bAf8ED231f3Fa672F0e5DcD665f7', '0x6Bc40d4099f9057b23aF309C08d935b890d7Adc0', '0xe8ceaAd8CB289d3e05775DC82060c4492CcE3E21', '0xE30EeEcdDa9157B350C37Ad58E140EDf19874E55', '0x10D07423FDe4747542E76B7199B98a0d03Cf465B', '0x1e2b3338A7331F6B21ceABeF29e68B74F11c3207', '0xFe1EF2B469846D1832B25095ff51B004f090E0C6', '0x20CDECBF5d56870b4068a255580a58D068446c92', '0x738865301A9b7Dd80Dc3666dD48cF034ec42bdDa', '0xC7555f6410E983C867748879B2F6d2b0b0e100fd', '0xa62d8FFB8d0Ca7d3938cd3776F6630Fc5dBadA79', '0xdAC17F958D2ee523a2206206994597C13D831ec7', '0x11f9e9B3c539368BEA16DDE2108B748a9672D714', '0x96c645D3D3706f793Ef52C19bBACe441900eD47D', '0x2c95D751DA37A5C1d9c5a7Fd465c1d50F3d96160']";
     a = a.replace(/'/g, '"');
     b = b.replace(/'/g, '"');
     tokens = tokens.concat(JSON.parse(a));
@@ -60,45 +60,49 @@
     }
     
     for (let i = 0; i < slider.value; i++) { 
-         newnodes.push({id: i, label: tokens[i], title: "a"});
+         newnodes.push({id: i, label: tokens[i], title: addresses[i]});
     }
      
 nodes.add(newnodes);
       
 var edges = new vis.DataSet([
-{ from: 0 ,to: 1, arrows: "to", label: "3813100858818.4766", value: 5 },
-{ from: 2 ,to: 1, arrows: "to", label: "2923919740044.8076", value: 4 },
-{ from: 1 ,to: 3, arrows: "to", label: "1040057755474.1556", value: 3 },
-{ from: 4 ,to: 1, arrows: "to", label: "2000000000.0", value: 2 },
-{ from: 5 ,to: 1, arrows: "to", label: "1891331328.0206254", value: 1 },
-{ from: 6 ,to: 1, arrows: "to", label: "1111111111.0", value: 0 },
-{ from: 7 ,to: 1, arrows: "to", label: "1047233102.9221636", value: 0 },
-{ from: 1 ,to: 8, arrows: "to", label: "185000000.0", value: 0 },
-{ from: 9 ,to: 1, arrows: "to", label: "25011054.119972643", value: 0 },
-{ from: 10 ,to: 1, arrows: "to", label: "731654.4741007333", value: 0 },
-{ from: 11 ,to: 1, arrows: "to", label: "152721.72256185915", value: 0 },
-{ from: 12 ,to: 1, arrows: "to", label: "45497.41287893216", value: 0 },
-{ from: 13 ,to: 1, arrows: "to", label: "386.29110086091003", value: 0 },
-{ from: 14 ,to: 1, arrows: "to", label: "375.0", value: 0 },
-{ from: 1 ,to: 15, arrows: "to", label: "3.05", value: 0 },
-{ from: 1 ,to: 16, arrows: "to", label: "2.0", value: 0 },
-{ from: 1 ,to: 13, arrows: "to", label: "0.8", value: 0 },
-{ from: 1 ,to: 17, arrows: "to", label: "0.7", value: 0 },
-{ from: 1 ,to: 18, arrows: "to", label: "0.5", value: 0 },
-{ from: 1 ,to: 19, arrows: "to", label: "0.45", value: 0 },
-{ from: 1 ,to: 20, arrows: "to", label: "0.30078948538572914", value: 0 },
-{ from: 1 ,to: 21, arrows: "to", label: "0.23", value: 0 },
-{ from: 1 ,to: 2, arrows: "to", label: "0.2", value: 0 },
-{ from: 1 ,to: 22, arrows: "to", label: "0.12", value: 0 },
-{ from: 1 ,to: 11, arrows: "to", label: "0.12", value: 0 },
-{ from: 1 ,to: 23, arrows: "to", label: "0.1", value: 0 },
-{ from: 1 ,to: 24, arrows: "to", label: "0.1", value: 0 },
-{ from: 1 ,to: 25, arrows: "to", label: "0.1", value: 0 },
-{ from: 1 ,to: 26, arrows: "to", label: "0.0500045625", value: 0 },
-{ from: 1 ,to: 27, arrows: "to", label: "0.05", value: 0 },
-{ from: 1 ,to: 28, arrows: "to", label: "0.01", value: 0 },
-{ from: 29 ,to: 1, arrows: "to", label: "0.000311173868033726", value: 0 },
-{ from: 30 ,to: 31, arrows: "to", label: "3.9505529639117e-05", value: 0 },
+{ from: 0 ,to: 1, arrows: "to", label: "5.78960446186581e+58", value: 5 },
+{ from: 2 ,to: 0, arrows: "to", label: "468678103911.11163", value: 4 },
+{ from: 3 ,to: 0, arrows: "to", label: "140694131149.253", value: 3 },
+{ from: 4 ,to: 0, arrows: "to", label: "16908724806.42638", value: 2 },
+{ from: 5 ,to: 6, arrows: "to", label: "3860283280.6599207", value: 1 },
+{ from: 7 ,to: 0, arrows: "to", label: "3819277013.260856", value: 0 },
+{ from: 5 ,to: 0, arrows: "to", label: "3323692605.200698", value: 0 },
+{ from: 8 ,to: 0, arrows: "to", label: "2324309239.0", value: 0 },
+{ from: 9 ,to: 0, arrows: "to", label: "309600018.0915839", value: 0 },
+{ from: 10 ,to: 0, arrows: "to", label: "70000000.0", value: 0 },
+{ from: 11 ,to: 0, arrows: "to", label: "2500000.0", value: 0 },
+{ from: 0 ,to: 12, arrows: "to", label: "125000.0", value: 0 },
+{ from: 13 ,to: 0, arrows: "to", label: "59889.950355375986", value: 0 },
+{ from: 14 ,to: 0, arrows: "to", label: "197.5", value: 0 },
+{ from: 0 ,to: 13, arrows: "to", label: "1.5", value: 0 },
+{ from: 0 ,to: 15, arrows: "to", label: "0.8", value: 0 },
+{ from: 0 ,to: 16, arrows: "to", label: "0.564138972", value: 0 },
+{ from: 0 ,to: 17, arrows: "to", label: "0.5435", value: 0 },
+{ from: 0 ,to: 18, arrows: "to", label: "0.2", value: 0 },
+{ from: 0 ,to: 19, arrows: "to", label: "0.179", value: 0 },
+{ from: 0 ,to: 10, arrows: "to", label: "0.15", value: 0 },
+{ from: 0 ,to: 20, arrows: "to", label: "0.12966", value: 0 },
+{ from: 0 ,to: 21, arrows: "to", label: "0.1", value: 0 },
+{ from: 0 ,to: 22, arrows: "to", label: "0.073", value: 0 },
+{ from: 0 ,to: 23, arrows: "to", label: "0.072", value: 0 },
+{ from: 0 ,to: 24, arrows: "to", label: "0.07", value: 0 },
+{ from: 0 ,to: 25, arrows: "to", label: "0.07", value: 0 },
+{ from: 0 ,to: 26, arrows: "to", label: "0.055", value: 0 },
+{ from: 0 ,to: 27, arrows: "to", label: "0.035", value: 0 },
+{ from: 0 ,to: 28, arrows: "to", label: "0.03", value: 0 },
+{ from: 29 ,to: 0, arrows: "to", label: "0.009", value: 0 },
+{ from: 0 ,to: 30, arrows: "to", label: "2.3e-07", value: 0 },
+{ from: 31 ,to: 0, arrows: "to", label: "1.34128712546e-07", value: 0 },
+{ from: 1 ,to: 0, arrows: "to", label: "1e-09", value: 0 },
+{ from: 32 ,to: 33, arrows: "to", label: "4.1e-10", value: 0 },
+{ from: 34 ,to: 0, arrows: "to", label: "4.934628e-12", value: 0 },
+{ from: 35 ,to: 36, arrows: "to", label: "1e-16", value: 0 },
  ]);
 
       // create a network
