@@ -147,8 +147,9 @@ for transaction in transactionList:
         from_to_amount[(fr, to)] += amount
 
 from_to_amount =sorted(from_to_amount.items(), key=lambda x:x[1],reverse=True)
-print(from_to_amount)
+
 token_names = []
+token_addresses = []
 for key in from_to_amount:
     first_addr = key[0][0]
     sec_addr = key[0][1]
@@ -156,8 +157,10 @@ for key in from_to_amount:
     second_name = getTheNameOfAToken(sec_addr)
     if first_name not in token_names:
         token_names.append(first_name)
+        token_addresses.append(first_addr)
     if second_name not in token_names:
         token_names.append(second_name)
+        token_addresses.append(sec_addr)
 
 print("Total transactions with input starting with '0x3593564c':", count)
 with open('data.csv', 'w', encoding='UTF8', newline='') as f:
@@ -218,22 +221,26 @@ f'''
     var nodes = new vis.DataSet([]);
     var newnodes = [];
     var tokens = [];
+    var addresses = [];
     var a = "''' + str(token_names) + '''";
+    var b = "''' + str(token_addresses) + '''";
     a = a.replace(/'/g, '"');
+    b = b.replace(/'/g, '"');
     tokens = tokens.concat(JSON.parse(a));
+    addresses = addresses.concat(JSON.parse(b));
     console.log(tokens);
     slider.oninput = function() { 
       output.innerHTML = this.value;
       nodes.clear();
       newnodes=[];
       for (let i = 0; i < slider.value; i++) { 
-           newnodes.push({id: i, label: tokens[i]});
+           newnodes.push({id: i, label: tokens[i], title: addresses[i]});
       }
       nodes.add(newnodes);
     }
     
     for (let i = 0; i < slider.value; i++) { 
-         newnodes.push({id: i, label: tokens[i]});
+         newnodes.push({id: i, label: tokens[i], title: addresses[i]});
     }
      ''')
 
@@ -248,10 +255,11 @@ nodes.add(newnodes);
 s = s  + "\n" + "var edges = new vis.DataSet([" + "\n"
 
 
-
+cnt = 5
 for x in from_to_amount:
 
-    s = s + '{ from: ' + str(token_names.index(getTheNameOfAToken(x[0][0]))) + ' ,to: ' + str(token_names.index(getTheNameOfAToken(x[0][1]))) + ', arrows: "to", label: "' + str(x[1] / 1000000000000000000) + '" },' + '\n'
+    s = s + '{ from: ' + str(token_names.index(getTheNameOfAToken(x[0][0]))) + ' ,to: ' + str(token_names.index(getTheNameOfAToken(x[0][1]))) + ', arrows: "to", label: "' + str(x[1] / 1000000000000000000) + '", value: ' + str(cnt) + ' },' + '\n'
+    cnt = max(cnt - 1, 0)
 
 s = s + ' ]);' + '\n' + '''
       // create a network
@@ -260,7 +268,21 @@ s = s + ' ]);' + '\n' + '''
         nodes: nodes,
         edges: edges,
       };
-      var options = {};
+      var options = {
+          edges: {
+                color: {
+                    color: '#EA738D',
+                    highlight: '#a973ec',
+                }
+          },
+          nodes: {
+                color: {
+                    background: '#89ABE3',
+                    border: '#89ABE3',
+                    highlight: '#a973ec',
+                }
+          }
+      };
       var network = new vis.Network(container, data, options);
       
       
@@ -310,7 +332,7 @@ s = s + ' ]);' + '\n' + '''
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #04AA6D;
+  background: #89ABE3;
   cursor: pointer;
 }
 
