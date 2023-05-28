@@ -19,22 +19,55 @@
     <div class="slidecontainer">
   <input type="range" 
         min=20 
-        max=38 
+        max=23 
         value=20 
         class="slider"
         id="myRange"
       />
   <p> Token Count: <span id="demo"></span></p>
 </div>
-<div id="mynetwork"></div>
-    <div>
+<div><button onclick="draw1()">Draw 1</button>
+  <button onclick="draw2()">Draw 2</button>
+  </div>
+  <div class="container">
+    <div id="mynetwork"></div>
+<div id="tableContainer"></div>
+  </div>
    
     <script type="text/javascript"> 
+     
+      const fr_to_amount =[];
+      function generateTable() {
+      var table = document.createElement("table");
+
+      var headerRow = document.createElement("tr");
+      var headers = ["From", "To", "Amount"];
+      for (var i = 0; i < headers.length; i++) {
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode(headers[i]));
+        headerRow.appendChild(th);
+      }
+      table.appendChild(headerRow);
+
+      for (var i = 0; i < fr_to_amount.length; i++) {
+        var row = document.createElement("tr");
+        for (var j = 0; j < fr_to_amount[i].length; j++) {
+          var cell = document.createElement("td");
+          cell.appendChild(document.createTextNode(fr_to_amount[i][j]));
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+
+        var tableContainer = document.getElementById("tableContainer");
+        tableContainer.innerHTML = "";
+        tableContainer.appendChild(table);
+    }
     
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
     output.innerHTML = slider.value;
-    var transaction_count = 42
+    var transaction_count = 45
     var text = document.getElementById('text');
     text.innerHTML = " Total number of UNISWAP transactions: " + transaction_count;
 
@@ -42,13 +75,13 @@
     var newnodes = [];
     var tokens = [];
     var addresses = [];
-    var a = "['ETH', 'USD Coin', 'Normie', 'Issou', 'Skeletor', 'Milady', 'Minions', 'Nyan Meme Coin', 'HyperToken', 'Krtek', 'WEN Marketing', 'PepePill', 'Peter Pan', 'Capybara', 'ANIME FOR CRYPTO', 'Pengu', 'I LOVE SNOOPY', 'Stoned Pepe', 'Autism', 'TARD', 'TEQUILA', 'PepeGod', 'BEER', 'SnailBrook', 'PiggyPepe', 'PePeHunter.ninja', 'SHROOMS', 'Felonious Gru', 'Pepe Coin', 'Monkeys Token', 'Agoras Token', 'SilverDAX', 'WENFRENS', 'Tether USD', 'Lint', 'MtPelerin Shares', 'WASSIE']";
-    var b = "['0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', '0x772c44b5166647B135BB4836AbC4E06c28E94978', '0x79BF5D97777ad512f93178dD8BCd341f44d1314F', '0xF0994613ec37e8BAA65740820186B7eA68015B0b', '0x12970E6868f88f6557B76120662c1B3E50A646bf', '0x271a66F8c4728b07A6a8D3895cf825f4A0791d3C', '0x0ebE30595a44E5288C24161dDfC1E9fa08E33a0C', '0x54D8517985E74D5708fe45621C8E945C9e4218B9', '0x9CfFcAD55d78B1370dE77e00C47B057EbE44334C', '0x0060032487F2FDCFf4eAd14Bb38F7dB7025f16Cb', '0xc27692916b733767aa42C91e228daFD74D6DaCb5', '0xCEBA2a8F6Ec221AEB5f3a7bcd15Cbc7e6a387bfb', '0xF190dbD849E372FF824e631a1FdF199f38358BCf', '0xc668B113ae740702CB27b49a4c9551276042c384', '0x26b17fC034b82A20563dbB02EC9E78B1D65d7a58', '0xF0EDAC27Aa3E85E2D176F689B0025f90C154393a', '0xa29681A78416C689A955E3E9e61348B348B9532D', '0x07bE107573a50A741231FF17E93dB323fD89DdFb', '0xBF9E1fD930d3507701293e66eBb8d940209fbae3', '0xB6911a0452f91BA730267a7b8a026d5866249c59', '0x113c8c68233bfA859230d09Abde89E2B483E3F91', '0x0D58df0929b6bAf8ED231f3Fa672F0e5DcD665f7', '0x6Bc40d4099f9057b23aF309C08d935b890d7Adc0', '0xe8ceaAd8CB289d3e05775DC82060c4492CcE3E21', '0xE30EeEcdDa9157B350C37Ad58E140EDf19874E55', '0x10D07423FDe4747542E76B7199B98a0d03Cf465B', '0x1e2b3338A7331F6B21ceABeF29e68B74F11c3207', '0xFe1EF2B469846D1832B25095ff51B004f090E0C6', '0x20CDECBF5d56870b4068a255580a58D068446c92', '0x738865301A9b7Dd80Dc3666dD48cF034ec42bdDa', '0xC7555f6410E983C867748879B2F6d2b0b0e100fd', '0xa62d8FFB8d0Ca7d3938cd3776F6630Fc5dBadA79', '0xdAC17F958D2ee523a2206206994597C13D831ec7', '0x11f9e9B3c539368BEA16DDE2108B748a9672D714', '0x96c645D3D3706f793Ef52C19bBACe441900eD47D', '0x2c95D751DA37A5C1d9c5a7Fd465c1d50F3d96160']";
+    var a = "['BABYREFUND', 'ETH', 'Ben', 'REBATE', 'BRUCE PEPE', 'REFUND', 'PloutΩs', 'LarryCoin', 'Psyop', 'Mr F was here', 'ORAO Network', 'SpongeBob', 'Fanta', 'PRESALE', 'Mrs F was here', 'MMT', 'USD Coin', 'MUMA', 'Chubaki Inu', 'Jake The Dog ', 'SLASHA', 'Encryption AI']";
+    var b = "['0x3C7a21Cb00569CA807cA4f1F4cf6c5dbD655EF06', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', '0x9bf1D7D63dD7a4ce167CF4866388226EEefa702E', '0x32f044dA25218598D4238A4fc6826Ac4ebb97e9E', '0x34C8b3fe84410f9B3870549E037FD1EA7b168977', '0x955d5c14C8D4944dA1Ea7836bd44D54a8eC35Ba1', '0x8718b8EB796ead111C0aF9CE05387e6c741d8e3e', '0xd08623FB2A1f044025EEC65886011CF5D0F06B01', '0x3007083EAA95497cD6B2b809fB97B6A30bdF53D3', '0x3d5d3DCD01469eF8C6bC9C45665835814635c725', '0xEE1CeA7665bA7aa97e982EdeaeCb26B59a04d035', '0x25722Cd432d02895d9BE45f5dEB60fc479c8781E', '0x5AdEbAfBf2FD0D6808A7a1E823759De2DF1df39e', '0xBAcaCD83b68C92Ae07eF382d0c0277D1Bd1c7C4D', '0x9EBBCbC8598Db92999c9B07B118cb5B7a3125661', '0x43B72Bf7F46d72f2d917F49BD97B9A000143eab7', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', '0xBbe02169b05c1Ca2e6891eca817950A355fA6eF3', '0x0BEdB558b5709B73b359ab8A1f2444885e68802f', '0x8d6C32789D425A6333bBFc9343b551Ea67ed0c91', '0x15F370F9BdB6B51ed01A21d79E9212C7a6562103', '0x397b102dECcACE4AA8E5bA63EeDb8e65ad83E20c']";
     a = a.replace(/'/g, '"');
     b = b.replace(/'/g, '"');
     tokens = tokens.concat(JSON.parse(a));
     addresses = addresses.concat(JSON.parse(b));
-    console.log(tokens);
+   
     slider.oninput = function() { 
       output.innerHTML = this.value;
       nodes.clear();
@@ -64,54 +97,74 @@
     }
      
 nodes.add(newnodes);
-      
+
+      fr_to_amount.push(["BABYREFUND","ETH","296306910458.23"]);
+fr_to_amount.push(["Ben","ETH","4141202244.95"]);
+fr_to_amount.push(["REBATE","ETH","1833698408.22"]);
+fr_to_amount.push(["BRUCE PEPE","ETH","67232731.12"]);
+fr_to_amount.push(["REFUND","ETH","44175297.01"]);
+fr_to_amount.push(["PloutΩs","ETH","10275358.33"]);
+fr_to_amount.push(["LarryCoin","ETH","3014111.42"]);
+fr_to_amount.push(["Psyop","ETH","346815.94"]);
+fr_to_amount.push(["Mr F was here","ETH","41601.99"]);
+fr_to_amount.push(["ETH","Mr F was here","15.22"]);
+fr_to_amount.push(["ETH","ORAO Network","2.0"]);
+fr_to_amount.push(["ETH","REFUND","1.72"]);
+fr_to_amount.push(["ETH","SpongeBob","0.84"]);
+fr_to_amount.push(["ETH","Fanta","0.43"]);
+fr_to_amount.push(["ETH","PRESALE","0.2"]);
+fr_to_amount.push(["ETH","Mrs F was here","0.16"]);
+fr_to_amount.push(["ETH","Ben","0.13"]);
+fr_to_amount.push(["ETH","MMT","0.13"]);
+fr_to_amount.push(["ETH","USD Coin","0.12"]);
+fr_to_amount.push(["ETH","MUMA","0.1"]);
+fr_to_amount.push(["ETH","Chubaki Inu","0.1"]);
+fr_to_amount.push(["ETH","Jake The Dog ","0.1"]);
+fr_to_amount.push(["ETH","SLASHA","0.07"]);
+fr_to_amount.push(["ETH","Mrs F was here","0.05"]);
+fr_to_amount.push(["Encryption AI","ETH","0.0"]);
+
 var edges = new vis.DataSet([
-{ from: 0 ,to: 1, arrows: "to", label: "5.78960446186581e+58", value: 5 },
-{ from: 2 ,to: 0, arrows: "to", label: "468678103911.11163", value: 4 },
-{ from: 3 ,to: 0, arrows: "to", label: "140694131149.253", value: 3 },
-{ from: 4 ,to: 0, arrows: "to", label: "16908724806.42638", value: 2 },
-{ from: 5 ,to: 6, arrows: "to", label: "3860283280.6599207", value: 1 },
-{ from: 7 ,to: 0, arrows: "to", label: "3819277013.260856", value: 0 },
-{ from: 5 ,to: 0, arrows: "to", label: "3323692605.200698", value: 0 },
-{ from: 8 ,to: 0, arrows: "to", label: "2324309239.0", value: 0 },
-{ from: 9 ,to: 0, arrows: "to", label: "309600018.0915839", value: 0 },
-{ from: 10 ,to: 0, arrows: "to", label: "70000000.0", value: 0 },
-{ from: 11 ,to: 0, arrows: "to", label: "2500000.0", value: 0 },
-{ from: 0 ,to: 12, arrows: "to", label: "125000.0", value: 0 },
-{ from: 13 ,to: 0, arrows: "to", label: "59889.950355375986", value: 0 },
-{ from: 14 ,to: 0, arrows: "to", label: "197.5", value: 0 },
-{ from: 0 ,to: 13, arrows: "to", label: "1.5", value: 0 },
-{ from: 0 ,to: 15, arrows: "to", label: "0.8", value: 0 },
-{ from: 0 ,to: 16, arrows: "to", label: "0.564138972", value: 0 },
-{ from: 0 ,to: 17, arrows: "to", label: "0.5435", value: 0 },
-{ from: 0 ,to: 18, arrows: "to", label: "0.2", value: 0 },
-{ from: 0 ,to: 19, arrows: "to", label: "0.179", value: 0 },
-{ from: 0 ,to: 10, arrows: "to", label: "0.15", value: 0 },
-{ from: 0 ,to: 20, arrows: "to", label: "0.12966", value: 0 },
-{ from: 0 ,to: 21, arrows: "to", label: "0.1", value: 0 },
-{ from: 0 ,to: 22, arrows: "to", label: "0.073", value: 0 },
-{ from: 0 ,to: 23, arrows: "to", label: "0.072", value: 0 },
-{ from: 0 ,to: 24, arrows: "to", label: "0.07", value: 0 },
-{ from: 0 ,to: 25, arrows: "to", label: "0.07", value: 0 },
-{ from: 0 ,to: 26, arrows: "to", label: "0.055", value: 0 },
-{ from: 0 ,to: 27, arrows: "to", label: "0.035", value: 0 },
-{ from: 0 ,to: 28, arrows: "to", label: "0.03", value: 0 },
-{ from: 29 ,to: 0, arrows: "to", label: "0.009", value: 0 },
-{ from: 0 ,to: 30, arrows: "to", label: "2.3e-07", value: 0 },
-{ from: 31 ,to: 0, arrows: "to", label: "1.34128712546e-07", value: 0 },
-{ from: 1 ,to: 0, arrows: "to", label: "1e-09", value: 0 },
-{ from: 32 ,to: 33, arrows: "to", label: "4.1e-10", value: 0 },
-{ from: 34 ,to: 0, arrows: "to", label: "4.934628e-12", value: 0 },
-{ from: 35 ,to: 36, arrows: "to", label: "1e-16", value: 0 },
+{ from: 0 ,to: 1, arrows: "to", label: "296306910458.23", value: 5 },
+{ from: 2 ,to: 1, arrows: "to", label: "4141202244.95", value: 4 },
+{ from: 3 ,to: 1, arrows: "to", label: "1833698408.22", value: 3 },
+{ from: 4 ,to: 1, arrows: "to", label: "67232731.12", value: 2 },
+{ from: 5 ,to: 1, arrows: "to", label: "44175297.01", value: 1 },
+{ from: 6 ,to: 1, arrows: "to", label: "10275358.33", value: 0 },
+{ from: 7 ,to: 1, arrows: "to", label: "3014111.42", value: 0 },
+{ from: 8 ,to: 1, arrows: "to", label: "346815.94", value: 0 },
+{ from: 9 ,to: 1, arrows: "to", label: "41601.99", value: 0 },
+{ from: 1 ,to: 9, arrows: "to", label: "15.22", value: 0 },
+{ from: 1 ,to: 10, arrows: "to", label: "2.0", value: 0 },
+{ from: 1 ,to: 5, arrows: "to", label: "1.72", value: 0 },
+{ from: 1 ,to: 11, arrows: "to", label: "0.84", value: 0 },
+{ from: 1 ,to: 12, arrows: "to", label: "0.43", value: 0 },
+{ from: 1 ,to: 13, arrows: "to", label: "0.2", value: 0 },
+{ from: 1 ,to: 14, arrows: "to", label: "0.16", value: 0 },
+{ from: 1 ,to: 2, arrows: "to", label: "0.13", value: 0 },
+{ from: 1 ,to: 15, arrows: "to", label: "0.13", value: 0 },
+{ from: 1 ,to: 16, arrows: "to", label: "0.12", value: 0 },
+{ from: 1 ,to: 17, arrows: "to", label: "0.1", value: 0 },
+{ from: 1 ,to: 18, arrows: "to", label: "0.1", value: 0 },
+{ from: 1 ,to: 19, arrows: "to", label: "0.1", value: 0 },
+{ from: 1 ,to: 20, arrows: "to", label: "0.07", value: 0 },
+{ from: 1 ,to: 14, arrows: "to", label: "0.05", value: 0 },
+{ from: 21 ,to: 1, arrows: "to", label: "0.0", value: 0 },
  ]);
 
       // create a network
+      console.log(fr_to_amount);
       var container = document.getElementById("mynetwork");
       var data = {
         nodes: nodes,
         edges: edges,
       };
       var options = {
+      layout: {
+                      hierarchical: {
+                       enabled:false,
+                      }
+                },
           edges: {
                 color: {
                     color: '#EA738D',
@@ -126,29 +179,73 @@ var edges = new vis.DataSet([
                 }
           }
       };
+      
+      var options2 = {
+          layout: {
+                      hierarchical: {
+                        direction: "LR",
+                        sortMethod: "directed"
+                      }
+                },
+          edges: {
+                color: {
+                    color: '#EA738D',
+                    highlight: '#a973ec',
+                }
+          },
+          nodes: {
+                color: {
+                    background: '#89ABE3',
+                    border: '#89ABE3',
+                    highlight: '#a973ec',
+                }
+          }
+      };
+      generateTable();
       var network = new vis.Network(container, data, options);
+      function draw1() {
+      network.setOptions(options);
+    }
+     function draw2() {
+      network.setOptions(options2);
+    }
       
       
     </script>
-    </div>
+ 
   </body>
 </html>
 <style type="text/css">
+    table, th, td {
+      border:1px solid #ddd;
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    th{
+    background-color: #EA738D;
+    }
   body {
     margin: 0;
     padding: 0;
   }
   
   #mynetwork {
-    width: 100%;
+    width: 50%;
     height: 100%;
-    border: 1px solid lightgray;
+    border: 1px;
   }
-  
-  #button{
-    position: absolute;
-    
+  #tableContainer{
+  margin-left:100px;
+  }
+   button
+   {
+    margin: 5px;
     }
+    p{
+    padding: 5px;
+    }
+
   .slidecontainer {
   width: 100%;
 }
@@ -185,6 +282,10 @@ var edges = new vis.DataSet([
   border-radius: 50%;
   background: #04AA6D;
   cursor: pointer;
+}
+
+.container{
+display:flex;
 }
     
 </style>
