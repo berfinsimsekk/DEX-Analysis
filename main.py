@@ -206,11 +206,44 @@ f'''
       />
   <p> Token Count: <span id="demo"></span></p>
 </div>
-<div id="mynetwork"></div>
-    <div>
+<div><button onclick="draw1()">Draw 1</button>
+  <button onclick="draw2()">Draw 2</button>
+  </div>
+  <div class="container">
+    <div id="mynetwork"></div>
+<div id="tableContainer"></div>
+  </div>
    
     <script type="text/javascript"> 
-    ''' + f'''
+    ''' + ''' 
+      const fr_to_amount =[];
+      function generateTable() {
+      var table = document.createElement("table");
+
+      var headerRow = document.createElement("tr");
+      var headers = ["From", "To", "Amount"];
+      for (var i = 0; i < headers.length; i++) {
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode(headers[i]));
+        headerRow.appendChild(th);
+      }
+      table.appendChild(headerRow);
+
+      for (var i = 0; i < fr_to_amount.length; i++) {
+        var row = document.createElement("tr");
+        for (var j = 0; j < fr_to_amount[i].length; j++) {
+          var cell = document.createElement("td");
+          cell.appendChild(document.createTextNode(fr_to_amount[i][j]));
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+
+        var tableContainer = document.getElementById("tableContainer");
+        tableContainer.innerHTML = "";
+        tableContainer.appendChild(table);
+    }''' +f'''
+    
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
     output.innerHTML = slider.value;
@@ -228,7 +261,7 @@ f'''
     b = b.replace(/'/g, '"');
     tokens = tokens.concat(JSON.parse(a));
     addresses = addresses.concat(JSON.parse(b));
-    console.log(tokens);
+   
     slider.oninput = function() { 
       output.innerHTML = this.value;
       nodes.clear();
@@ -249,26 +282,38 @@ id = 1
 
 s= s + '''
 nodes.add(newnodes);
+
       '''
+
+for x in from_to_amount:
+
+    s = s + 'fr_to_amount.push(["' + str(getTheNameOfAToken(x[0][0])) + '","' + str(getTheNameOfAToken(x[0][1])) + '","' + str(round(x[1]/ 1000000000000000000,2)) + '"]);' + '\n'
 
 
 s = s  + "\n" + "var edges = new vis.DataSet([" + "\n"
 
 
 cnt = 5
+
 for x in from_to_amount:
 
-    s = s + '{ from: ' + str(token_names.index(getTheNameOfAToken(x[0][0]))) + ' ,to: ' + str(token_names.index(getTheNameOfAToken(x[0][1]))) + ', arrows: "to", label: "' + str(x[1] / 1000000000000000000) + '", value: ' + str(cnt) + ' },' + '\n'
+    s = s + '{ from: ' + str(token_names.index(getTheNameOfAToken(x[0][0]))) + ' ,to: ' + str(token_names.index(getTheNameOfAToken(x[0][1]))) + ', arrows: "to", label: "' + str(round(x[1]/ 1000000000000000000,2)) + '", value: ' + str(cnt) + ' },' + '\n'
     cnt = max(cnt - 1, 0)
 
 s = s + ' ]);' + '\n' + '''
       // create a network
+      console.log(fr_to_amount);
       var container = document.getElementById("mynetwork");
       var data = {
         nodes: nodes,
         edges: edges,
       };
       var options = {
+      layout: {
+                      hierarchical: {
+                       enabled:false,
+                      }
+                },
           edges: {
                 color: {
                     color: '#EA738D',
@@ -283,29 +328,73 @@ s = s + ' ]);' + '\n' + '''
                 }
           }
       };
+      
+      var options2 = {
+          layout: {
+                      hierarchical: {
+                        direction: "LR",
+                        sortMethod: "directed"
+                      }
+                },
+          edges: {
+                color: {
+                    color: '#EA738D',
+                    highlight: '#a973ec',
+                }
+          },
+          nodes: {
+                color: {
+                    background: '#89ABE3',
+                    border: '#89ABE3',
+                    highlight: '#a973ec',
+                }
+          }
+      };
+      generateTable();
       var network = new vis.Network(container, data, options);
+      function draw1() {
+      network.setOptions(options);
+    }
+     function draw2() {
+      network.setOptions(options2);
+    }
       
       
     </script>
-    </div>
+ 
   </body>
 </html>
 <style type="text/css">
+    table, th, td {
+      border:1px solid #ddd;
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    th{
+    background-color: #EA738D;
+    }
   body {
     margin: 0;
     padding: 0;
   }
   
   #mynetwork {
-    width: 100%;
+    width: 50%;
     height: 100%;
-    border: 1px solid lightgray;
+    border: 1px;
   }
-  
-  #button{
-    position: absolute;
-    
+  #tableContainer{
+  margin-left:100px;
+  }
+   button
+   {
+    margin: 5px;
     }
+    p{
+    padding: 5px;
+    }
+
   .slidecontainer {
   width: 100%;
 }
@@ -342,6 +431,10 @@ s = s + ' ]);' + '\n' + '''
   border-radius: 50%;
   background: #04AA6D;
   cursor: pointer;
+}
+
+.container{
+display:flex;
 }
     
 </style>
